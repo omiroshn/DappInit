@@ -15,41 +15,27 @@ contract Passport is Roles {
     }
     
     modifier ageInRange(uint8 age) {
-        require(age >= 1 && age <= 115, "Wrong age value.");
+        require(age >= 1 && age <= 115, "Wrong age value. 1 < age < 115.");
         _;
     }
     
-    function writeNewUser(
-        string name,
-        string surname,
-        uint8 age) external ageInRange(age) returns (bool) {
-            
+    function writeNewUser(string name, string surname, uint8 age) external ageInRange(age) returns (bool) {
+        
+        uint id = userAmount;
         UserData memory newUser = UserData(
-			name,
-			surname,
-			age,
-			userAmount
-		);
+            name,
+            surname,
+            age,
+            id
+        );
+        
         userAmount += 1;
         users[msg.sender] = newUser;
-
-        return true;
+        return (true);
     }
     
-    function getUserFirstName(address userAddress) public view returns(string) {
-		return (users[userAddress].name);
-	}
-
-	function getUserLastName(address userAddress) public view returns(string) {
-		return (users[userAddress].surname);
-	}
-
-	function getUserAge(address userAddress) public view returns(uint8) {
-		return (users[userAddress].age);
-	}
-
-	function getUserId(address userAddress) public view returns(uint256) {
-		return (users[userAddress].id);
-	}
+    function userExist(address userAddress) external view returns(bool) {
+        return (users[userAddress].id != 0);
+    }
 
 }
